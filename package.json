@@ -1,0 +1,35 @@
+{
+  "name": "mms_quiz",
+  "version": "1.0.0",
+  "description": "A simple web-app with a telegram bot for making quizzes and inviting guests to events",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Advokat1/MMS_Quiz.git"
+  },
+  "keywords": [
+    "Web-app",
+    "Telegram",
+    "Bootstrap",
+    "Crypto-JS",
+    "MMS"
+  ],
+  "author": "Dmitry Nazarov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Advokat1/MMS_Quiz/issues"
+  },
+  "homepage": "https://github.com/Advokat1/MMS_Quiz#readme",
+  "dependencies": {
+    "bootstrap": "^5.3.7",
+    "crypto-js": "^4.2.0"
+  },
+  "devDependencies": {
+    "webpack": "^5.101.3",
+    "webpack-cli": "^6.0.1"
+  }
+}

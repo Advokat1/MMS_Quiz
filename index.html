@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Простое веб-приложение для бота в телеграм, предназначенное для проведения мини викторин и приглашения участников к розыгрышу призов">
+  <link rel="shortcut icon" href="./resources/images/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.css">
+  <link rel="stylesheet" href="./static/style.css">
+  <script src="https://telegram.org/js/telegram-web-app.js?57"></script>
+  <title>MMS Quiz</title>
+</head>
+
+<body>
+  <!-- Панель навигации -->
+  <header>
+    <nav class="navbar fixed-top bg-nav">
+      <div class="container justify-content-center">
+        <span class="navbar-brand mb-0 h1 text-light">Викторина</span>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Основной блок приложения -->
+  <main>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-8 col-sm-12">
+          <!-- Часть интерфейса с приветствием -->
+          <div id="welcomeBlock" class="text-center">
+            <img src="./resources/images/MMS_Quiz_Start_Alt.jpg" width="250" height="250" class="img-fluid" alt="Изображение для заставки">
+            <div class="text-center mt-4">
+              <h4 class="text-dark">Вы готовы?</h4>
+            </div>
+            <div class="mt-4">
+              <button id="startQuizBtn" type="button" onclick="startQuiz()" class="btn btn-menu col-8 col-xl-4">Начать викторину!</button>
+            </div>
+          </div>
+
+          <!-- Часть интерфейса с викториной -->
+          <div id="quizLogicBlock" class="d-none">
+            <div class="text-center">
+              <img id="questionImage" src="./resources/images/Question_1.png" width="250" height="250" class="img-fluid" alt="Изображение для вопроса">
+            </div>
+            <div class="text-center mt-4">
+              <h4 id="questionText" class="text-dark">Очень сложный вопрос на тему построения систем мультимедиа</h4>
+            </div>
+            <div class="d-flex flex-column align-items-center">
+              <button id="answer1" type="button" class="btn btn-answer mt-2 col-8 col-xl-4" onclick="selectOption(1, this)">Вариант ответа №1</button>
+              <button id="answer2" type="button" class="btn btn-answer mt-2 col-8 col-xl-4" onclick="selectOption(2, this)">Вариант ответа №2</button>
+              <button id="answer3" type="button" class="btn btn-answer mt-2 col-8 col-xl-4" onclick="selectOption(3, this)">Вариант ответа №3</button>
+              <button id="answer4" type="button" class="btn btn-answer mt-2 col-8 col-xl-4" onclick="selectOption(4, this)">Вариант ответа №4</button>
+              <button id="answerConfirm" type="button" onclick="checkSelectedOption()" class="btn btn-menu m-4 col-8 col-xl-4">Следующий вопрос</button>
+            </div>
+          </div>
+
+          <!-- Часть интерфейса с подведением итогов если пользователь набрал больше порогового значения-->
+          <div id="resultsFormBlock" class="d-none">
+            <div class="text-center">
+              <img src="./resources/images/MMS_Quiz_Win_Alt.jpg" width="250" height="250" class="img-fluid" alt="Изображение для завершения">
+            </div>
+            <div class="text-center mt-4">
+              <h4 class="text-dark">Поздравляем!</h4>
+            </div>
+            <div class="text-center mt-4">
+              <h4 class="text-dark">Вы ответили правильно на __ из __!</h4>
+            </div>
+            <div class="row justify-content-center mt-4">
+              <form class="col-8 col-xl-4">
+                <div class="mb-3">
+                  <label for="userSurname" class="form-label text-dark">Фамилия</label>
+                  <input type="text" class="form-control" id="userSurname">
+                </div>
+                <div class="mb-3">
+                  <label for="userName" class="form-label text-dark">Имя</label>
+                  <input type="text" class="form-control" id="userName">
+                </div>
+                <div class="mb-3">
+                  <label for="userNumber" class="form-label text-dark">Контактный номер телефона</label>
+                  <input type="tel" class="form-control" id="userNumber">
+                </div>
+                <div class="mb-3">
+                  <label for="userEmail" class="form-label text-dark">Адрес электронной почты</label>
+                  <input type="email" class="form-control" id="userEmail" aria-describedby="emailHelp">
+                  <div id="emailHelp" class="form-text text-dark">Эти данные понадобятся для подведения итогов и розыгрыша призов</div>
+                </div>
+                <div class="text-center">
+                  <button type="submit" class="btn btn-menu mb-4 col-8 col-xl-4">Отправить</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Часть интерфейса с подведением итогов если пользователь набрал меньше порогового значения-->
+          <div id="resultsBlock" class="d-none">
+            <div class="text-center">
+              <img src="./resources/images/MMS_Quiz_Win_Alt.jpg" width="250" height="250" class="img-fluid" alt="Изображение для завершения">
+            </div>
+            <div class="text-center mt-4">
+              <h4 class="text-dark">Поздравляем!</h4>
+            </div>
+            <div class="text-center mt-4">
+              <h4 id="results" class="text-dark">Вы ответили правильно на __ из __!</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- <footer class="bg-nav text-light text-center p-4 mt-5">
+    <div class="container">
+      <p>&copy; CROC 2009-2025. Все права защищены</p>
+      <ul class="list-unstyled">
+        <li><a href="https://www.croc.ru/personal-data-processing-policy/" class="text-light">Политика обработки персональных данных</a></li>
+        <li><a href="https://www.croc.ru/contact/" class="text-light">Контакты</a></li>
+      </ul>
+    </div>
+  </footer> -->
+</body>
+
+<script src="dist/bundle.js"></script>
+
+</html>
